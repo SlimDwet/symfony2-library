@@ -1,0 +1,4 @@
+services:
+#    tuto_library.example:
+#        class: Tuto\LibraryBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
