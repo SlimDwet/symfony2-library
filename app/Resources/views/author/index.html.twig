@@ -3,14 +3,18 @@
 {% block body %}
     <div class="auhors">
         <h1 class="page-header">Liste des auteurs</h1>
-
-        <table>
+        <br>
+        <p>
+            <a href="{{ path('author_new') }}" class="btn btn-default">Créer un auteur</a>
+        </p>
+        <br>
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Nickname</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Nom d'artiste</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -36,10 +40,5 @@
             </tbody>
         </table>
 
-        <ul>
-            <li>
-                <a href="{{ path('author_new') }}">Create a new entry</a>
-            </li>
-        </ul>
     </div>
 {% endblock %}
