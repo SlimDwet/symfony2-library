@@ -22,6 +22,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
 
     protected $file;
 
+    protected function getApiVersion()
+    {
+        return Validation::API_VERSION_2_5;
+    }
+
     protected function createValidator()
     {
         return new FileValidator();

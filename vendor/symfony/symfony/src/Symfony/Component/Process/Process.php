@@ -216,7 +216,7 @@ class Process
      * @throws RuntimeException       if PHP was compiled with --enable-sigchild and the enhanced sigchild compatibility mode is not enabled
      * @throws ProcessFailedException if the process didn't terminate successfully
      */
-    public function mustRun(callable $callback = null)
+    public function mustRun($callback = null)
     {
         if (!$this->enhanceSigchildCompatibility && $this->isSigchildEnabled()) {
             throw new RuntimeException('This PHP has been compiled with --enable-sigchild. You must use setEnhanceSigchildCompatibility() to use this method.');
@@ -251,7 +251,7 @@ class Process
      * @throws RuntimeException When process is already running
      * @throws LogicException   In case a callback is provided and output has been disabled
      */
-    public function start(callable $callback = null)
+    public function start($callback = null)
     {
         if ($this->isRunning()) {
             throw new RuntimeException('Process is already running');
@@ -324,7 +324,7 @@ class Process
      *
      * @see start()
      */
-    public function restart(callable $callback = null)
+    public function restart($callback = null)
     {
         if ($this->isRunning()) {
             throw new RuntimeException('Process is already running');
@@ -351,7 +351,7 @@ class Process
      * @throws RuntimeException When process stopped after receiving signal
      * @throws LogicException   When process is not yet started
      */
-    public function wait(callable $callback = null)
+    public function wait($callback = null)
     {
         $this->requireProcessIsStarted(__FUNCTION__);
 
@@ -780,8 +780,12 @@ class Process
             }
         }
 
-        $this->updateStatus(false);
-        if ($this->processInformation['running']) {
+        if ($this->isRunning()) {
+            if (isset($this->fallbackStatus['pid'])) {
+                unset($this->fallbackStatus['pid']);
+
+                return $this->stop(0, $signal);
+            }
             $this->close();
         }
 
@@ -1021,6 +1025,22 @@ class Process
     }
 
     /**
+     * Gets the contents of STDIN.
+     *
+     * @return string|null The current contents
+     *
+     * @deprecated since version 2.5, to be removed in 3.0.
+     *             Use setInput() instead.
+     *             This method is deprecated in favor of getInput.
+     */
+    public function getStdin()
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.5 and will be removed in 3.0. Use the getInput() method instead.', E_USER_DEPRECATED);
+
+        return $this->getInput();
+    }
+
+    /**
      * Gets the Process input.
      *
      * @return null|string The Process input
@@ -1028,6 +1048,26 @@ class Process
     public function getInput()
     {
         return $this->input;
+    }
+
+    /**
+     * Sets the contents of STDIN.
+     *
+     * @param string|null $stdin The new contents
+     *
+     * @return self The current Process instance
+     *
+     * @deprecated since version 2.5, to be removed in 3.0.
+     *             Use setInput() instead.
+     *
+     * @throws LogicException           In case the process is running
+     * @throws InvalidArgumentException In case the argument is invalid
+     */
+    public function setStdin($stdin)
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.5 and will be removed in 3.0. Use the setInput() method instead.', E_USER_DEPRECATED);
+
+        return $this->setInput($stdin);
     }
 
     /**
@@ -1040,6 +1080,8 @@ class Process
      * @return self The current Process instance
      *
      * @throws LogicException In case the process is running
+     *
+     * Passing an object as an input is deprecated since version 2.5 and will be removed in 3.0.
      */
     public function setInput($input)
     {
@@ -1205,12 +1247,13 @@ class Process
      */
     protected function buildCallback($callback)
     {
+        $that = $this;
         $out = self::OUT;
-        $callback = function ($type, $data) use ($callback, $out) {
+        $callback = function ($type, $data) use ($that, $callback, $out) {
             if ($out == $type) {
-                $this->addOutput($data);
+                $that->addOutput($data);
             } else {
-                $this->addErrorOutput($data);
+                $that->addErrorOutput($data);
             }
 
             if (null !== $callback) {
@@ -1300,13 +1343,10 @@ class Process
 
         $callback = $this->callback;
         foreach ($result as $type => $data) {
-            if (3 === $type) {
-                $this->fallbackStatus['running'] = false;
-                if (!isset($this->fallbackStatus['signaled'])) {
-                    $this->fallbackStatus['exitcode'] = (int) $data;
-                }
-            } else {
+            if (3 !== $type) {
                 $callback($type === self::STDOUT ? self::OUT : self::ERR, $data);
+            } elseif (!isset($this->fallbackStatus['signaled'])) {
+                $this->fallbackStatus['exitcode'] = (int) $data;
             }
         }
     }
@@ -1376,7 +1416,7 @@ class Process
      */
     private function doSignal($signal, $throwException)
     {
-        if (!$this->isRunning()) {
+        if (null === $pid = $this->getPid()) {
             if ($throwException) {
                 throw new LogicException('Can not send signal on a non running process.');
             }
@@ -1385,7 +1425,7 @@ class Process
         }
 
         if ('\\' === DIRECTORY_SEPARATOR) {
-            exec(sprintf('taskkill /F /T /PID %d 2>&1', $this->getPid()), $output, $exitCode);
+            exec(sprintf('taskkill /F /T /PID %d 2>&1', $pid), $output, $exitCode);
             if ($exitCode && $this->isRunning()) {
                 if ($throwException) {
                     throw new RuntimeException(sprintf('Unable to kill the process (%s).', implode(' ', $output)));
@@ -1397,8 +1437,8 @@ class Process
             if (!$this->enhanceSigchildCompatibility || !$this->isSigchildEnabled()) {
                 $ok = @proc_terminate($this->process, $signal);
             } elseif (function_exists('posix_kill')) {
-                $ok = @posix_kill($this->getPid(), $signal);
-            } elseif ($ok = proc_open(sprintf('kill -%d %d', $signal, $this->getPid()), array(2 => array('pipe', 'w')), $pipes)) {
+                $ok = @posix_kill($pid, $signal);
+            } elseif ($ok = proc_open(sprintf('kill -%d %d', $signal, $pid), array(2 => array('pipe', 'w')), $pipes)) {
                 $ok = false === fgets($pipes[2]);
             }
             if (!$ok) {
