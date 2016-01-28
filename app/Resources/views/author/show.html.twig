@@ -1,40 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Author</h1>
+    <h1 class="page-header">Détails auteur</h1>
 
-    <table>
+    <div>
+        <a href="{{ path('author_index') }}" class="btn btn-default">Liste des auteurs</a>
+        <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-primary">Modifier</a>
+        {{ form_start(delete_form, { 'attr': { 'style': 'display: inline' } }) }}
+            <input type="submit" value="Delete" class="btn btn-danger">
+        {{ form_end(delete_form) }}
+    </div>
+    <br>
+
+    <table class="table table-hover">
         <tbody>
             <tr>
-                <th>Id</th>
+                <td>ID</td>
                 <td>{{ author.id }}</td>
             </tr>
             <tr>
-                <th>Firstname</th>
+                <td>Prénom</td>
                 <td>{{ author.firstname }}</td>
             </tr>
             <tr>
-                <th>Lastname</th>
+                <td>Nom</td>
                 <td>{{ author.lastname }}</td>
             </tr>
             <tr>
-                <th>Nickname</th>
+                <td>Nom d'artiste</td>
                 <td>{{ author.nickname }}</td>
             </tr>
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('author_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('author_edit', { 'id': author.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
 {% endblock %}
