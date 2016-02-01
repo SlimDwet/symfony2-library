@@ -44,7 +44,7 @@ class AuthorController extends Controller
             $em->persist($author);
             $em->flush();
 
-            return $this->redirectToRoute('author_show', array('id' => $author->getId()));
+            return $this->redirectToRoute('author_index');
         }
 
         return $this->render('author/new.html.twig', array(
@@ -82,7 +82,7 @@ class AuthorController extends Controller
             $em->persist($author);
             $em->flush();
 
-            return $this->redirectToRoute('author_edit', array('id' => $author->getId()));
+            return $this->redirectToRoute('author_index');
         }
 
         return $this->render('author/edit.html.twig', array(
