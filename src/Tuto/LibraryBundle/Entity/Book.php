@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Book
  *
  * @ORM\Table(name="book")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Tuto\LibraryBundle\Repository\BookRepository")
  */
 class Book
@@ -23,7 +24,8 @@ class Book
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="Author", mappedBy="book")
+     * @ORM\ManyToMany(targetEntity="Author", inversedBy="book")
+     * @JoinTable(name="book_author")
      */
     protected $authors;
 

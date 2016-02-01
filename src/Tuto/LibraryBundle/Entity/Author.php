@@ -3,6 +3,7 @@
 namespace Tuto\LibraryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Author
@@ -58,10 +59,15 @@ class Author
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Book", inversedBy="author")
+     * @ORM\ManyToMany(targetEntity="Book", mappedBy="author")
      * @ORM\JoinColumn(name="
      */
     protected $books;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
 
 
     /**
