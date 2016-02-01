@@ -10,6 +10,9 @@ var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
 
+# Session
+app/sessions/*
+
 # Parameters
 app/config/parameters.yml
 app/config/parameters.ini
