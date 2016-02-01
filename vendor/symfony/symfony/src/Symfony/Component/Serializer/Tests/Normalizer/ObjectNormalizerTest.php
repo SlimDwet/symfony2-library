@@ -97,6 +97,29 @@ class ObjectNormalizerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $obj->bar);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testLegacyDenormalizeOnCamelCaseFormat()
+    {
+        $this->normalizer->setCamelizedAttributes(array('camel_case'));
+        $obj = $this->normalizer->denormalize(
+            array('camel_case' => 'camelCase'),
+            __NAMESPACE__.'\ObjectDummy'
+        );
+        $this->assertEquals('camelCase', $obj->getCamelCase());
+    }
+
+    public function testNameConverterSupport()
+    {
+        $this->normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
+        $obj = $this->normalizer->denormalize(
+            array('camel_case' => 'camelCase'),
+            __NAMESPACE__.'\ObjectDummy'
+        );
+        $this->assertEquals('camelCase', $obj->getCamelCase());
+    }
+
     public function testDenormalizeNull()
     {
         $this->assertEquals(new ObjectDummy(), $this->normalizer->denormalize(null, __NAMESPACE__.'\ObjectDummy'));
@@ -132,6 +155,11 @@ class ObjectNormalizerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(1, 2, 3), $obj->getBaz());
     }
 
+    /**
+     * @see https://bugs.php.net/62715
+     *
+     * @requires PHP 5.3.17
+     */
     public function testConstructorDenormalizeWithOptionalDefaultArgument()
     {
         $obj = $this->normalizer->denormalize(
@@ -444,6 +472,21 @@ class ObjectNormalizerTest extends \PHPUnit_Framework_TestCase
     public function testNormalizeStatic()
     {
         $this->assertEquals(array('foo' => 'K'), $this->normalizer->normalize(new ObjectWithStaticPropertiesAndMethods()));
+    }
+
+    public function testNormalizeNotSerializableContext()
+    {
+        $objectDummy = new ObjectDummy();
+        $expected = array(
+            'foo' => null,
+            'baz' => null,
+            'fooBar' => '',
+            'camelCase' => null,
+            'object' => null,
+            'bar' => null,
+        );
+
+        $this->assertEquals($expected, $this->normalizer->normalize($objectDummy, null, array('not_serializable' => function () {})));
     }
 }
 

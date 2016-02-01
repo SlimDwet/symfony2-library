@@ -21,6 +21,11 @@ use Symfony\Component\Validator\Validation;
 
 abstract class CollectionValidatorTest extends AbstractConstraintValidatorTest
 {
+    protected function getApiVersion()
+    {
+        return Validation::API_VERSION_2_5;
+    }
+
     protected function createValidator()
     {
         return new CollectionValidator();

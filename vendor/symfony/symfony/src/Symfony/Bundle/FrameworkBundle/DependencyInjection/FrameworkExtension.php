@@ -87,6 +87,8 @@ class FrameworkExtension extends Extension
             $this->registerRequestConfiguration($config['request'], $container, $loader);
         }
 
+        $loader->load('security.xml');
+
         if ($this->isConfigEnabled($container, $config['form'])) {
             $this->formConfigEnabled = true;
             $this->registerFormConfiguration($config, $container, $loader);
@@ -94,6 +96,10 @@ class FrameworkExtension extends Extension
 
             if (!class_exists('Symfony\Component\Validator\Validation')) {
                 throw new LogicException('The Validator component is required to use the Form component.');
+            }
+
+            if ($this->isConfigEnabled($container, $config['form']['csrf_protection'])) {
+                $config['csrf_protection']['enabled'] = true;
             }
         }
 
@@ -137,10 +143,12 @@ class FrameworkExtension extends Extension
         }
 
         if ($container->getParameter('kernel.debug')) {
+            $definition->replaceArgument(2, -1 & ~(E_COMPILE_ERROR | E_PARSE | E_ERROR | E_CORE_ERROR | E_RECOVERABLE_ERROR));
+
             $loader->load('debug.xml');
 
             $definition = $container->findDefinition('http_kernel');
-            $definition->replaceArgument(1, new Reference('debug.controller_resolver'));
+            $definition->replaceArgument(2, new Reference('debug.controller_resolver'));
 
             // replace the regular event_dispatcher service with the debug one
             $definition = $container->findDefinition('event_dispatcher');
@@ -148,7 +156,7 @@ class FrameworkExtension extends Extension
             $container->setDefinition('debug.event_dispatcher.parent', $definition);
             $container->setAlias('event_dispatcher', 'debug.event_dispatcher');
         } else {
-            $definition->replaceArgument(2, E_COMPILE_ERROR | E_PARSE | E_ERROR | E_CORE_ERROR);
+            $definition->replaceArgument(1, null);
         }
 
         $this->addClassesToCompile(array(
@@ -206,7 +214,12 @@ class FrameworkExtension extends Extension
             $loader->load('form_csrf.xml');
 
             $container->setParameter('form.type_extension.csrf.enabled', true);
-            $container->setParameter('form.type_extension.csrf.field_name', $config['form']['csrf_protection']['field_name']);
+
+            if (null !== $config['form']['csrf_protection']['field_name']) {
+                $container->setParameter('form.type_extension.csrf.field_name', $config['form']['csrf_protection']['field_name']);
+            } else {
+                $container->setParameter('form.type_extension.csrf.field_name', $config['csrf_protection']['field_name']);
+            }
         } else {
             $container->setParameter('form.type_extension.csrf.enabled', false);
         }
@@ -295,12 +308,26 @@ class FrameworkExtension extends Extension
         $container->setParameter('profiler_listener.only_master_requests', $config['only_master_requests']);
 
         // Choose storage class based on the DSN
+        $supported = array(
+            'sqlite' => 'Symfony\Component\HttpKernel\Profiler\SqliteProfilerStorage',
+            'mysql' => 'Symfony\Component\HttpKernel\Profiler\MysqlProfilerStorage',
+            'file' => 'Symfony\Component\HttpKernel\Profiler\FileProfilerStorage',
+            'mongodb' => 'Symfony\Component\HttpKernel\Profiler\MongoDbProfilerStorage',
+            'memcache' => 'Symfony\Component\HttpKernel\Profiler\MemcacheProfilerStorage',
+            'memcached' => 'Symfony\Component\HttpKernel\Profiler\MemcachedProfilerStorage',
+            'redis' => 'Symfony\Component\HttpKernel\Profiler\RedisProfilerStorage',
+        );
         list($class) = explode(':', $config['dsn'], 2);
-        if ('file' !== $class) {
+        if (!isset($supported[$class])) {
             throw new \LogicException(sprintf('Driver "%s" is not supported for the profiler.', $class));
         }
 
         $container->setParameter('profiler.storage.dsn', $config['dsn']);
+        $container->setParameter('profiler.storage.username', $config['username']);
+        $container->setParameter('profiler.storage.password', $config['password']);
+        $container->setParameter('profiler.storage.lifetime', $config['lifetime']);
+
+        $container->getDefinition('profiler.storage')->setClass($supported[$class]);
 
         if (isset($config['matcher'])) {
             if (isset($config['matcher']['service'])) {
@@ -539,12 +566,12 @@ class FrameworkExtension extends Extension
                 'Symfony\\Bundle\\FrameworkBundle\\Templating\\PhpEngine',
                 'Symfony\\Bundle\\FrameworkBundle\\Templating\\Loader\\FilesystemLoader',
             ));
+        }
 
-            if ($container->hasDefinition('assets.packages')) {
-                $container->getDefinition('templating.helper.assets')->replaceArgument(0, new Reference('assets.packages'));
-            } else {
-                $container->removeDefinition('templating.helper.assets');
-            }
+        if ($container->hasDefinition('assets.packages')) {
+            $container->getDefinition('templating.helper.assets')->replaceArgument(0, new Reference('assets.packages'));
+        } else {
+            $container->removeDefinition('templating.helper.assets');
         }
     }
 
@@ -664,16 +691,17 @@ class FrameworkExtension extends Extension
 
             $dirs[] = dirname($r->getFileName()).'/../Resources/translations';
         }
-        $overridePath = $container->getParameter('kernel.root_dir').'/Resources/%s/translations';
+        $rootDir = $container->getParameter('kernel.root_dir');
         foreach ($container->getParameter('kernel.bundles') as $bundle => $class) {
             $reflection = new \ReflectionClass($class);
             if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/translations')) {
                 $dirs[] = $dir;
             }
-            if (is_dir($dir = sprintf($overridePath, $bundle))) {
+            if (is_dir($dir = $rootDir.sprintf('/Resources/%s/translations', $bundle))) {
                 $dirs[] = $dir;
             }
         }
+
         foreach ($config['paths'] as $dir) {
             if (is_dir($dir)) {
                 $dirs[] = $dir;
@@ -681,7 +709,8 @@ class FrameworkExtension extends Extension
                 throw new \UnexpectedValueException(sprintf('%s defined in translator.paths does not exist or is not a directory', $dir));
             }
         }
-        if (is_dir($dir = $container->getParameter('kernel.root_dir').'/Resources/translations')) {
+
+        if (is_dir($dir = $rootDir.'/Resources/translations')) {
             $dirs[] = $dir;
         }
 
@@ -768,6 +797,12 @@ class FrameworkExtension extends Extension
 
             $validatorBuilder->addMethodCall('setMetadataCache', array(new Reference($config['cache'])));
         }
+
+        // You can use this parameter to check the API version in your own
+        // bundle extension classes
+        // This is set to 2.5-bc for compatibility with Symfony 2.5 and 2.6.
+        // @deprecated since version 2.7, to be removed in 3.0
+        $container->setParameter('validator.api', '2.5-bc');
     }
 
     private function getValidatorMappingFiles(ContainerBuilder $container)
@@ -824,6 +859,13 @@ class FrameworkExtension extends Extension
                 $container
                     ->getDefinition('annotations.filesystem_cache')
                     ->replaceArgument(0, $cacheDir)
+                ;
+
+                // The annotations.file_cache_reader service is deprecated
+                $container
+                    ->getDefinition('annotations.file_cache_reader')
+                    ->replaceArgument(1, $cacheDir)
+                    ->replaceArgument(2, $config['debug'])
                 ;
             }
 
