@@ -57,6 +57,12 @@ class Author
      */
     protected $updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="author")
+     * @ORM\JoinColumn(name="
+     */
+    protected $books;
+
 
     /**
      * Get id
