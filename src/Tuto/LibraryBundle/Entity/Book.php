@@ -24,8 +24,8 @@ class Book
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Author", inversedBy="book")
-     * @JoinTable(name="book_author")
+     * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
+     * @ORM\JoinTable(name="book_author")
      */
     protected $authors;
 

@@ -59,8 +59,7 @@ class Author
     protected $updated;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Book", mappedBy="author")
-     * @ORM\JoinColumn(name="
+     * @ORM\ManyToMany(targetEntity="Book", mappedBy="authors")
      */
     protected $books;
 
