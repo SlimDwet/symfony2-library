@@ -2,6 +2,10 @@ tuto_library_author:
     resource: "@TutoLibraryBundle/Resources/config/routing/author.yml"
     prefix:   /author
 
+tuto_library_book:
+    resource: "@TutoLibraryBundle/Resources/config/routing/book.yml"
+    prefix:   /book
+
 tuto_library_homepage:
     path:     /
     defaults: { _controller: TutoLibraryBundle:Default:index }

@@ -36,20 +36,6 @@ class Book
     private $nb_copies;
 
     /**
-     * @var datetime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @var datetime
-     *
-     * @ORM\Column(type="datetime", nullable = true)
-     */
-    protected $updated;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
      * @ORM\JoinTable(name="book_author")
      */
@@ -122,46 +108,5 @@ class Book
     public function getAuthors()
     {
         return $this->authors;
-    }
-
-    /**
-     * Set nb_copies
-     *
-     * @param integer $nbCopies
-     * @return Book
-     */
-    public function setNbCopies($nbCopies)
-    {
-        $this->nb_copies = $nbCopies;
-
-        return $this;
-    }
-
-    /**
-     * Get nb_copies
-     *
-     * @return integer 
-     */
-    public function getNbCopies()
-    {
-        return $this->nb_copies;
-    }
-
-    /**
-     * Gets triggered only on insert
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
-    {
-        $this->created = new \DateTime("now");
-    }
-
-    /**
-     * Gets triggered every time on update
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate()
-    {
-        $this->updated = new \DateTime("now");
     }
 }

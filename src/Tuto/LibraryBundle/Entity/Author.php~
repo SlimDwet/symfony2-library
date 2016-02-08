@@ -3,6 +3,7 @@
 namespace Tuto\LibraryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Author
@@ -56,6 +57,16 @@ class Author
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Book", mappedBy="authors")
+     */
+    protected $books;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
 
 
     /**
@@ -142,7 +153,6 @@ class Author
 
     /**
      * Gets triggered only on insert
-
      * @ORM\PrePersist
      */
     public function onPrePersist()
@@ -152,12 +162,91 @@ class Author
 
     /**
      * Gets triggered every time on update
-
      * @ORM\PreUpdate
      */
     public function onPreUpdate()
     {
         $this->updated = new \DateTime("now");
     }
-}
 
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return Author
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return Author
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Add books
+     *
+     * @param \Tuto\LibraryBundle\Entity\Book $books
+     * @return Author
+     */
+    public function addBook(\Tuto\LibraryBundle\Entity\Book $books)
+    {
+        $this->books[] = $books;
+
+        return $this;
+    }
+
+    /**
+     * Remove books
+     *
+     * @param \Tuto\LibraryBundle\Entity\Book $books
+     */
+    public function removeBook(\Tuto\LibraryBundle\Entity\Book $books)
+    {
+        $this->books->removeElement($books);
+    }
+
+    /**
+     * Get books
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBooks()
+    {
+        return $this->books;
+    }
+}

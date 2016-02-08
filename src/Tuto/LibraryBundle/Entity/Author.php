@@ -216,4 +216,37 @@ class Author
     {
         return $this->updated;
     }
+
+    /**
+     * Add books
+     *
+     * @param \Tuto\LibraryBundle\Entity\Book $books
+     * @return Author
+     */
+    public function addBook(\Tuto\LibraryBundle\Entity\Book $books)
+    {
+        $this->books[] = $books;
+
+        return $this;
+    }
+
+    /**
+     * Remove books
+     *
+     * @param \Tuto\LibraryBundle\Entity\Book $books
+     */
+    public function removeBook(\Tuto\LibraryBundle\Entity\Book $books)
+    {
+        $this->books->removeElement($books);
+    }
+
+    /**
+     * Get books
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBooks()
+    {
+        return $this->books;
+    }
 }

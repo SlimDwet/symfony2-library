@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="books">
+        <h1 class="page-header">Liste des livres</h1>
+        <br>
+        <p>
+            <a href="{{ path('book_new') }}" class="btn btn-default">Créer un livre</a>
+        </p>
+        <br>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Nombre de copies</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td><a href="{{ path('book_show', { 'id': book.id }) }}">{{ book.id }}</a></td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.nb_copies}}</td>
+                    <td>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-default">Détails</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('book_edit', { 'id': book.id }) }}" class="btn btn-primary">Modifier</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
