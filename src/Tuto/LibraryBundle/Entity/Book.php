@@ -132,7 +132,7 @@ class Book
      */
     public function setNbCopies($nbCopies)
     {
-        $this->$nbCopies = $nbCopies;
+        $this->nbCopies = $nbCopies;
 
         return $this;
     }

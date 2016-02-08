@@ -5,6 +5,7 @@ namespace Tuto\LibraryBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tuto\LibraryBundle\Form\AuthorType;
 
 class BookType extends AbstractType
 {
@@ -16,7 +17,8 @@ class BookType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('nb_copies')
+            ->add('nbCopies')
+            ->add('authors', AuthorType::class, array('data_class' => null))
         ;
     }
     

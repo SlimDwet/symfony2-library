@@ -249,4 +249,13 @@ class Author
     {
         return $this->books;
     }
+
+    /**
+     * Retourne le nom de la classe
+     * @return string
+     */
+    public function getName()
+    {
+        return strtolower(__CLASS__);
+    }
 }

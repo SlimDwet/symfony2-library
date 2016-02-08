@@ -4,7 +4,7 @@
     <h1 class="page-header">Edition d'un livre</h1>
 
     <div>
-        <a href="{{ path('author_index') }}" class="btn btn-primary">Liste des livres</a>
+        <a href="{{ path('book_index') }}" class="btn btn-primary">Liste des livres</a>
         {{ form_start(delete_form, { 'attr': { 'style': 'display: inline' } }) }}
         <input type="submit" value="Supprimer" class="btn btn-danger">
         {{ form_end(delete_form) }}
@@ -22,11 +22,11 @@
     </div>
 
     <div class="form-group">
-        {{ form_label(edit_form.nb_copies, 'Nombre de copies', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+        {{ form_label(edit_form.nbCopies, 'Nombre de copies', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
         <div class="col-sm-4">
-            {{ form_row(edit_form.nb_copies, {'attr': {'class': 'form-control'}, 'label': false}) }}
+            {{ form_row(edit_form.nbCopies, {'attr': {'class': 'form-control'}, 'label': false}) }}
         </div>
-        {{ form_errors(edit_form.nb_copies) }}
+        {{ form_errors(edit_form.nbCopies) }}
     </div>
 
     <div class="form-group">

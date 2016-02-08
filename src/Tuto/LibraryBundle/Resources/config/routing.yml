@@ -8,4 +8,4 @@ tuto_library_book:
 
 tuto_library_homepage:
     path:     /
-    defaults: { _controller: TutoLibraryBundle:Default:index }
+    defaults: { _controller: TutoLibraryBundle:Book:index }

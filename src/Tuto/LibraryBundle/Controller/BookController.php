@@ -44,7 +44,7 @@ class BookController extends Controller
             $em->persist($book);
             $em->flush();
 
-            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_index');
         }
 
         return $this->render('book/new.html.twig', array(
@@ -82,7 +82,7 @@ class BookController extends Controller
             $em->persist($book);
             $em->flush();
 
-            return $this->redirectToRoute('book_edit', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_index');
         }
 
         return $this->render('book/edit.html.twig', array(
