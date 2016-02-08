@@ -33,17 +33,17 @@ class Book
      *
      * @ORM\Column(name="nb_copies", type="integer")
      */
-    private $nb_copies;
+    private $nbCopies;
 
     /**
-     * @var datetime
+     * @var string
      *
      * @ORM\Column(type="datetime")
      */
     protected $created;
 
     /**
-     * @var datetime
+     * @var string
      *
      * @ORM\Column(type="datetime", nullable = true)
      */
@@ -132,7 +132,7 @@ class Book
      */
     public function setNbCopies($nbCopies)
     {
-        $this->nb_copies = $nbCopies;
+        $this->$nbCopies = $nbCopies;
 
         return $this;
     }
@@ -144,7 +144,7 @@ class Book
      */
     public function getNbCopies()
     {
-        return $this->nb_copies;
+        return $this->nbCopies;
     }
 
     /**
