@@ -14,6 +14,7 @@
                 <th>Id</th>
                 <th>Titre</th>
                 <th>Nombre de copies</th>
+                <th>Auteurs</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -22,7 +23,14 @@
                 <tr>
                     <td><a href="{{ path('book_show', { 'id': book.id }) }}">{{ book.id }}</a></td>
                     <td>{{ book.title }}</td>
-                    <td>{{ book.nbCopies}}</td>
+                    <td>{{ book.nbCopies }}</td>
+                    <td>
+                        <ul class="list-unstyled">
+                        {% for author in book.authors %}
+                                <li>{{ author.nickname }}</li>
+                        {% endfor %}
+                        </ul>
+                    </td>
                     <td>
                         <ul class="list-inline">
                             <li>

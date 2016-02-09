@@ -61,7 +61,7 @@ class Author
     /**
      * @ORM\ManyToMany(targetEntity="Book", mappedBy="authors")
      */
-    protected $books;
+    public $books;
 
     public function __construct()
     {

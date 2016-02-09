@@ -53,8 +53,11 @@ class Book
      * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
      * @ORM\JoinTable(name="book_author")
      */
-    protected $authors;
+    public $authors;
 
+    /**
+     * Constructeur
+     */
     public function __construct()
     {
         $this->authors = new ArrayCollection();

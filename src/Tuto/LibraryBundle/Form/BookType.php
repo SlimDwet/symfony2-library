@@ -16,12 +16,26 @@ class BookType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('nbCopies')
-            ->add('authors', AuthorType::class, array('data_class' => null))
+            ->add('title', null, array(
+                'label' => 'Titre',
+                'label_attr' => array('class' => 'col-sm-2 control-label')
+            ))
+            ->add('nbCopies', null, array(
+                'label' => 'Nombre de copies',
+                'label_attr' => array('class' => 'col-sm-2 control-label')
+            ))
+            ->add('authors', 'entity', array(
+                'data_class' => null,
+                'class' => 'TutoLibraryBundle:Author',
+                'property' => 'nickname',
+                'placeholder' => 'Sélectionnez un auteur',
+                'multiple' => true,
+                'label' => 'Auteur',
+                'label_attr' => array('class' => 'col-sm-2 control-label')
+            ))
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

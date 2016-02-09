@@ -40,6 +40,11 @@ class AuthorController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // On créé un nom d'auteur s'il n'est pas renseigné
+            if(is_null($author->getNickname())) {
+                $author->setNickname($author->getFirstname().' '.$author->getLastname());
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($author);
             $em->flush();
@@ -78,6 +83,11 @@ class AuthorController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            // On créé un nom d'auteur s'il n'est pas renseigné
+            if(is_null($author->getNickname())) {
+                $author->setNickname($author->getFirstname().' '.$author->getLastname());
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($author);
             $em->flush();
