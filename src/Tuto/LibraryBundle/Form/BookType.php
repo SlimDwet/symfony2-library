@@ -24,14 +24,16 @@ class BookType extends AbstractType
                 'label' => 'Nombre de copies',
                 'label_attr' => array('class' => 'col-sm-2 control-label')
             ))
-            ->add('authors', 'entity', array(
-                'data_class' => null,
-                'class' => 'TutoLibraryBundle:Author',
-                'property' => 'nickname',
-                'placeholder' => 'Sélectionnez un auteur',
-                'multiple' => true,
+            ->add('authors', 'collection', array(
+                'entry_type' => new AuthorType(),
                 'label' => 'Auteur',
-                'label_attr' => array('class' => 'col-sm-2 control-label')
+                'attr' => array(
+                    'multiple' => true,
+                    'placeholder' => 'Yo !'
+                ),
+//                'property_path' => 'title',
+                'label_attr' => array('class' => 'col-sm-2 control-label'),
+                'allow_add' => true // Permet l'ajout dynamique d'auteur
             ))
         ;
     }
