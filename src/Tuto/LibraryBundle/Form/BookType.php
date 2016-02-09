@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tuto\LibraryBundle\Form\AuthorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class BookType extends AbstractType
 {
@@ -24,16 +25,12 @@ class BookType extends AbstractType
                 'label' => 'Nombre de copies',
                 'label_attr' => array('class' => 'col-sm-2 control-label')
             ))
-            ->add('authors', 'collection', array(
-                'entry_type' => new AuthorType(),
-                'label' => 'Auteur',
-                'attr' => array(
-                    'multiple' => true,
-                    'placeholder' => 'Yo !'
-                ),
-//                'property_path' => 'title',
-                'label_attr' => array('class' => 'col-sm-2 control-label'),
-                'allow_add' => true // Permet l'ajout dynamique d'auteur
+            ->add('authors', EntityType::class, array(
+                'class' => 'TutoLibraryBundle:Author',
+                'choice_label' => 'nickname',
+                'multiple' => true,
+                'label' => 'Auteurs',
+                'label_attr' => array('class' => 'control-label col-sm-2')
             ))
         ;
     }

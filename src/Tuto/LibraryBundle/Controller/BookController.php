@@ -5,6 +5,7 @@ namespace Tuto\LibraryBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Tuto\LibraryBundle\Entity\Author;
 use Tuto\LibraryBundle\Entity\Book;
 use Tuto\LibraryBundle\Form\BookType;
 
