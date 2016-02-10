@@ -43,6 +43,26 @@
         {{ form_errors(edit_form.authors) }}
     </div>
 
+    {% if edit_form.authors_add is defined %}
+    <div class="authors_add">
+        {% for author_add in form.authors_add %}
+            <div class="form-group">
+                {{ form_label(author_add.lastname) }}
+                <div class="col-sm-4">
+                    {{ form_row(author_add.lastname, {'attr': {'class': 'form-control'}, 'label': false}) }}
+                </div>
+                {{ form_errors(author_add.lastname) }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!--<div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+            <a href="">Ajouter un auteur</a>
+        </div>
+    </div>-->
+
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-4">
             <input type="submit" value="Modifier" class="btn btn-default" />

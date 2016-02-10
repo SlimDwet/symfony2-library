@@ -74,6 +74,8 @@ class BookController extends Controller
      */
     public function editAction(Request $request, Book $book)
     {
+        $author = new Author();
+        $book->addAuthor($author);
         $deleteForm = $this->createDeleteForm($book);
         $editForm = $this->createForm('Tuto\LibraryBundle\Form\BookType', $book);
         $editForm->handleRequest($request);

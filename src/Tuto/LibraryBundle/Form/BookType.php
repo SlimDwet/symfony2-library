@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tuto\LibraryBundle\Form\AuthorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class BookType extends AbstractType
 {
@@ -31,6 +32,12 @@ class BookType extends AbstractType
                 'multiple' => true,
                 'label' => 'Auteurs',
                 'label_attr' => array('class' => 'control-label col-sm-2')
+            ))
+            ->add('authors_add', CollectionType::class, array(
+                'allow_add' => true,
+                'allow_delete' => true,
+                'entry_type' => AuthorType::class,
+                'mapped' => false
             ))
         ;
     }
