@@ -35,17 +35,12 @@
         {{ form_errors(edit_form.nbCopies) }}
     </div>
 
-    <div class="form-group">
-        {{ form_label(edit_form.authors) }}
-        <div class="col-sm-4">
-            {{ form_row(edit_form.authors, {'attr': {'class': 'form-control'}, 'label': false}) }}
-        </div>
-        {{ form_errors(edit_form.authors) }}
-    </div>
+    <ul class="authors_new" data-prototype="{{ form_widget(edit_form.authors_add.vars.prototype)|e }}">
+    </ul>
 
-    {% if edit_form.authors_add is defined %}
+    {% if edit_form.authors_add is not defined %}
     <div class="authors_add">
-        {% for author_add in form.authors_add %}
+        {% for author_add in edit_form.authors_add %}
             <div class="form-group">
                 {{ form_label(author_add.lastname) }}
                 <div class="col-sm-4">
