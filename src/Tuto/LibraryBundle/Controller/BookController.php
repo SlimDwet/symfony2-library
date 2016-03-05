@@ -37,6 +37,9 @@ class BookController extends Controller
     public function newAction(Request $request)
     {
         $book = new Book();
+        $author = new Author();
+        $book->getAuthors()->add($author);
+
         $form = $this->createForm('Tuto\LibraryBundle\Form\BookType', $book);
         $form->handleRequest($request);
 
@@ -74,10 +77,8 @@ class BookController extends Controller
      */
     public function editAction(Request $request, Book $book)
     {
-        $author = new Author();
-        $book->addAuthor($author);
         $deleteForm = $this->createDeleteForm($book);
-        $editForm = $this->createForm('Tuto\LibraryBundle\Form\BookType', $book);
+        $editForm = $this->createForm(BookType::class, $book);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

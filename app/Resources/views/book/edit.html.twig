@@ -1,68 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-    {% javascripts '@TutoLibraryBundle/Resources/public/js/book.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{% block body %}
+    <br>
+    <p>
+        <a href="{{ path('book_index') }}" class="btn btn-default">Liste des livres</a>
+    </p>
+    <br>
+    <div class="authors">
+        {{ form_start(edit_form) }}
+        {{ form_row(edit_form.title) }}
+        {{ form_row(edit_form.nbCopies) }}
+
+        <h3>Auteurs</h3>
+        <div class="book_authors" data-prototype="{{ form_widget(edit_form.authors.vars.prototype)|e }}">
+            {% for author in edit_form.authors %}
+                <div class="form-group">
+                    {{ form_row(author.firstname) }}
+                    {{ form_row(author.lastname) }}
+                    {{ form_row(author.nickname) }}
+                </div>
+            {% endfor %}
+        </div>
+        {{ form_widget(edit_form.save, {'attr': {'class': 'btn btn-default'}, 'label': 'Modifier'}) }}
+        {{ form_end(edit_form) }}
+    </div>
 {% endblock %}
 
-{% block body %}
-    <h1 class="page-header">Edition d'un livre</h1>
-
-    <div>
-        <a href="{{ path('book_index') }}" class="btn btn-primary">Liste des livres</a>
-        {{ form_start(delete_form, { 'attr': { 'style': 'display: inline' } }) }}
-        <input type="submit" value="Supprimer" class="btn btn-danger">
-        {{ form_end(delete_form) }}
-    </div>
-    <br>
-
-    {{ form_start(edit_form, {'attr': { 'class': 'form-horizontal' }}) }}
-
-    <div class="form-group">
-        {{ form_label(edit_form.title, 'Titre') }}
-        <div class="col-sm-4">
-            {{ form_row(edit_form.title, {'attr': {'class': 'form-control'}, 'label': false}) }}
-        </div>
-        {{ form_errors(edit_form.title) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(edit_form.nbCopies) }}
-        <div class="col-sm-4">
-            {{ form_row(edit_form.nbCopies, {'attr': {'class': 'form-control'}, 'label': false}) }}
-        </div>
-        {{ form_errors(edit_form.nbCopies) }}
-    </div>
-
-    <ul class="authors_new" data-prototype="{{ form_widget(edit_form.authors_add.vars.prototype)|e }}">
-    </ul>
-
-    {% if edit_form.authors_add is not defined %}
-    <div class="authors_add">
-        {% for author_add in edit_form.authors_add %}
-            <div class="form-group">
-                {{ form_label(author_add.lastname) }}
-                <div class="col-sm-4">
-                    {{ form_row(author_add.lastname, {'attr': {'class': 'form-control'}, 'label': false}) }}
-                </div>
-                {{ form_errors(author_add.lastname) }}
-            </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!--<div class="form-group">
-        <div class="col-sm-offset-2 col-sm-4">
-            <a href="">Ajouter un auteur</a>
-        </div>
-    </div>-->
-
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-4">
-            <input type="submit" value="Modifier" class="btn btn-default" />
-        </div>
-    </div>
-    {{ form_end(edit_form) }}
-
+{% block javascripts %}
+    {% javascripts '@TutoLibraryBundle/Resources/public/js/book.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

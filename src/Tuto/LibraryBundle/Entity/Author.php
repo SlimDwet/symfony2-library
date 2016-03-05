@@ -61,7 +61,7 @@ class Author
     /**
      * @ORM\ManyToMany(targetEntity="Book", mappedBy="authors")
      */
-    public $books;
+    protected $books;
 
     public function __construct()
     {
@@ -158,6 +158,11 @@ class Author
     public function onPrePersist()
     {
         $this->created = new \DateTime("now");
+
+        // Création d'un nom d'auteur
+        if(is_null($this->nickname)) {
+            $this->setNickname($this->firstname.' '.$this->lastname);
+        }
     }
 
     /**
@@ -167,6 +172,11 @@ class Author
     public function onPreUpdate()
     {
         $this->updated = new \DateTime("now");
+
+        // Création d'un nom d'auteur
+        if(is_null($this->nickname)) {
+            $this->setNickname($this->firstname.' '.$this->lastname);
+        }
     }
 
     /**

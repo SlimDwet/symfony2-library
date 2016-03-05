@@ -1,43 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1 class="page-header">Ajout d'un livre</h1>
-    <br>
-    <p>
-        <a href="{{ path('book_index') }}" class="btn btn-default">Liste des livres</a>
-    </p>
-    <br>
-    {{ form_start(form, {'attr': { 'class': 'form-horizontal' }}) }}
+    <div class="authors">
+        {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.nbCopies) }}
 
-    <div class="form-group">
-        {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-        <div class="col-sm-4">
-            {{ form_row(form.title, {'attr': {'class': 'form-control'}, 'label': false}) }}
+        <h3>Auteurs</h3>
+        <div class="book_authors" data-prototype="{{ form_widget(form.authors.vars.prototype)|e }}">
+            {% for author in form.authors %}
+                <div class="form-group">
+                    {{ form_row(author.firstname) }}
+                    {{ form_row(author.lastname) }}
+                    {{ form_row(author.nickname) }}
+                </div>
+            {% endfor %}
         </div>
-        {{ form_errors(form.title) }}
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-default'}, 'label': 'Ajouter'}) }}
+        {{ form_end(form) }}
     </div>
+{% endblock %}
 
-    <div class="form-group">
-        {{ form_label(form.nbCopies, 'Nombre de copies', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-        <div class="col-sm-4">
-            {{ form_row(form.nbCopies, {'attr': {'class': 'form-control'}, 'label': false}) }}
-        </div>
-        {{ form_errors(form.nbCopies) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(form.authors) }}
-        <div class="col-sm-4">
-            {{ form_row(form.authors, {'attr': {'class': 'form-control'}, 'label': false}) }}
-        </div>
-        {{ form_errors(form.authors) }}
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-4">
-            <input type="submit" value="Ajouter" class="btn btn-default" />
-        </div>
-    </div>
-    {{ form_end(form) }}
-
+{% block javascripts %}
+    {% javascripts '@TutoLibraryBundle/Resources/public/js/book.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

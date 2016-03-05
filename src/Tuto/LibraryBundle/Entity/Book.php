@@ -50,10 +50,10 @@ class Book
     protected $updated;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
+     * @ORM\ManyToMany(targetEntity="Author", inversedBy="books", cascade={"persist"})
      * @ORM\JoinTable(name="book_author")
      */
-    public $authors;
+    protected $authors;
 
     /**
      * Constructeur
@@ -103,7 +103,9 @@ class Book
      */
     public function addAuthor(Author $author)
     {
-        $this->authors[] = $author;
+        if(!$this->authors->contains($author)) {
+            $this->authors[] = $author;
+        }
 
         return $this;
     }
@@ -114,8 +116,10 @@ class Book
      */
     public function removeAuthor(Author $author)
     {
-        // Utilisation de la méthode removeElement de l'objet ArrayCollection
-        $this->authors->removeElement($author);
+        if($this->authors->contains($author)) {
+            // Utilisation de la méthode removeElement de l'objet ArrayCollection
+            $this->authors->removeElement($author);
+        }
     }
 
     /**
