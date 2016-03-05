@@ -1,7 +1,7 @@
 var $collectionHolder;
 
 // setup an "add a author" link
-var $addAuthorLink = $('<a href="#" class="add_author_link">Ajouter un auteur</a>');
+var $addAuthorLink = $('<br><a href="#" class="add_author_link btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter un auteur</a>');
 var $newLinkLi = $('<p></p>').append($addAuthorLink);
 
 function addAuthorForm($collectionHolder, $newLinkLi) {
@@ -27,7 +27,7 @@ function addAuthorForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormA = $('<a href="#">Supprimer cet auteur</a>');
+    var $removeFormA = $('<a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Supprimer cet auteur</a>');
     $tagFormLi.append($removeFormA);
 
     $removeFormA.on('click', function(e) {
@@ -47,7 +47,7 @@ jQuery(document).ready(function() {
     $collectionHolder.append($newLinkLi);
 
     // add a delete link to all of the existing tag form li elements
-    $collectionHolder.find('.form-group').each(function() {
+    $collectionHolder.find('.author_item').each(function() {
         addTagFormDeleteLink($(this));
     });
 

@@ -18,15 +18,12 @@ class AuthorType extends AbstractType
         $builder
             ->add('firstname', TextType::class, array(
                 'label' => 'Prénom',
-                'label_attr' => array('class' => 'control-label col-sm-2')
             ))
             ->add('lastname', TextType::class, array(
                 'label' => 'Nom',
-                'label_attr' => array('class' => 'control-label col-sm-2')
             ))
             ->add('nickname', TextType::class, array(
                 'label' => "Nom d'auteur",
-                'label_attr' => array('class' => 'control-label col-sm-2'),
                 'required' => false
             ))
         ;

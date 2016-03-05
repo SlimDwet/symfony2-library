@@ -4,10 +4,16 @@
     <h1 class="page-header">Détails auteur</h1>
     
     <div>
-        <a href="{{ path('author_index') }}" class="btn btn-default">Liste des auteurs</a>
-        <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-primary">Modifier</a>
+        <a href="{{ path('author_index') }}" class="btn btn-default">
+            <span class="glyphicon glyphicon-th-list"></span>&nbsp;Liste des auteurs
+        </a>
+        <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-primary">
+            <span class="glyphicon glyphicon-pencil"></span>&nbsp;Modifier
+        </a>
         {{ form_start(delete_form, { 'attr': { 'style': 'display: inline' } }) }}
-            <input type="submit" value="Delete" class="btn btn-danger">
+            <button type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;Supprimer
+            </button>
         {{ form_end(delete_form) }}
     </div>
     <br>

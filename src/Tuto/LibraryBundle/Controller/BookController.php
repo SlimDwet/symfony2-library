@@ -48,6 +48,11 @@ class BookController extends Controller
             $em->persist($book);
             $em->flush();
 
+            $this->addFlash(
+                'info',
+                "Le livre <strong>".$book->getTitle()."</strong> a été ajouté !"
+            );
+
             return $this->redirectToRoute('book_index');
         }
 

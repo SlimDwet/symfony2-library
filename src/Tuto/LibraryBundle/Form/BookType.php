@@ -21,11 +21,9 @@ class BookType extends AbstractType
         $builder
             ->add('title', null, array(
                 'label' => 'Titre',
-                'label_attr' => array('class' => 'col-sm-2 control-label')
             ))
             ->add('nbCopies', null, array(
                 'label' => 'Nombre de copies',
-                'label_attr' => array('class' => 'col-sm-2 control-label')
             ))
             ->add('authors', CollectionType::class, array(
                 'allow_add' => true,

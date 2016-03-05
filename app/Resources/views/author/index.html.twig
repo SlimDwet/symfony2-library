@@ -5,9 +5,14 @@
         <h1 class="page-header">Liste des auteurs</h1>
         <br>
         <p>
-            <a href="{{ path('author_new') }}" class="btn btn-default">Créer un auteur</a>
+            <a href="{{ path('author_new') }}" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;Ajouter un auteur
+            </a>
         </p>
         <br>
+    {% if authors is empty %}
+        <div class="alert alert-danger"><strong>Pas d'auteurs</strong></div>
+    {% else %}
         <table class="table table-hover">
             <thead>
             <tr>
@@ -28,10 +33,14 @@
                     <td>
                         <ul class="list-inline">
                             <li>
-                                <a href="{{ path('author_show', { 'id': author.id }) }}" class="btn btn-default">Détails</a>
+                                <a href="{{ path('author_show', { 'id': author.id }) }}" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-th-list"></span>&nbsp;Détails
+                                </a>
                             </li>
                             <li>
-                                <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-primary">Modifier</a>
+                                <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;Modifier
+                                </a>
                             </li>
                         </ul>
                     </td>
@@ -39,6 +48,7 @@
             {% endfor %}
             </tbody>
         </table>
+    {% endif %}
 
     </div>
 {% endblock %}

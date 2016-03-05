@@ -4,7 +4,9 @@
     <h1 class="page-header">Ajout d'un auteur</h1>
     <br>
     <p>
-        <a href="{{ path('author_index') }}" class="btn btn-default">Liste des auteurs</a>
+        <a href="{{ path('author_index') }}" class="btn btn-default">
+            <span class="glyphicon glyphicon-th-list"></span>&nbsp;Liste des auteurs
+        </a>
     </p>
     <br>
     {{ form_start(form, {'attr': { 'class': 'form-horizontal' }}) }}

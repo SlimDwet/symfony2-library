@@ -1,9 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <h1 class="page-header">Edition du livre {{ book.title }}</h1>
     <br>
     <p>
-        <a href="{{ path('book_index') }}" class="btn btn-default">Liste des livres</a>
+        <a href="{{ path('book_index') }}" class="btn btn-default">
+            <span class="glyphicon glyphicon-th-list"></span>&nbsp;Liste des livres
+        </a>
     </p>
     <br>
     <div class="authors">
@@ -21,7 +24,7 @@
                 </div>
             {% endfor %}
         </div>
-        {{ form_widget(edit_form.save, {'attr': {'class': 'btn btn-default'}, 'label': 'Modifier'}) }}
+        {{ form_widget(edit_form.save, {'attr': {'class': 'btn btn-default'}, 'label': 'Modifier le livre'}) }}
         {{ form_end(edit_form) }}
     </div>
 {% endblock %}

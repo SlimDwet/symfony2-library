@@ -4,9 +4,13 @@
     <h1 class="page-header">Edition d'un auteur</h1>
 
     <div>
-        <a href="{{ path('author_index') }}" class="btn btn-primary">Liste des auteurs</a>
+        <a href="{{ path('author_index') }}" class="btn btn-default">
+            <span class="glyphicon glyphicon-th-list"></span>&nbsp;Liste des auteurs
+        </a>
         {{ form_start(delete_form, { 'attr': { 'style': 'display: inline' } }) }}
-        <input type="submit" value="Supprimer" class="btn btn-danger">
+            <button type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;Supprimer
+            </button>
         {{ form_end(delete_form) }}
     </div>
     <br>
